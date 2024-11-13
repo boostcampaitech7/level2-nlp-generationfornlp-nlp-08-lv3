@@ -1,5 +1,5 @@
 import re
-import pandas as pd
+import pandas as pd # type: ignore
 import ast
 
 input_file_path = '/Users/idahyeon/Downloads/nlp_project4/train.csv'
