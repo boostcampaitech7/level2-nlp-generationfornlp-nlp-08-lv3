@@ -1,0 +1,18 @@
+2024-11-12 12:58:56,858:ERROR:Error processing row 237: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-12 13:13:40,884:ERROR:Error processing row 400: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-12 13:32:13,849:ERROR:Error processing row 605: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-12 13:35:10,780:ERROR:Error processing row 381: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-12 13:45:05,218:ERROR:Error processing row 491: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-12 14:00:13,203:ERROR:Error processing row 658: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
