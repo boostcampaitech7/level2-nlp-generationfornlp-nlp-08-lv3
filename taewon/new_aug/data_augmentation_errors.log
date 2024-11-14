@@ -1,0 +1,56 @@
+2024-11-13 14:32:43,858:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 14:32:48,052:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 14:48:50,302:ERROR:Invalid answer format in row 142: **New Answer:** 1, 2 
+2024-11-13 14:49:24,554:ERROR:Invalid answer format in row 144: **New Answer:** 1, 3, 5 
+2024-11-13 14:54:54,449:ERROR:Invalid answer format in row 183: **New Answer:** 1, 2 
+2024-11-13 14:55:39,010:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.text` quick accessor requires the response to contain a valid `Part`, but none were returned. The candidate's [finish_reason](https://ai.google.dev/api/generate-content#finishreason) is 5.
+2024-11-13 14:58:49,769:ERROR:Invalid answer format in row 203: **New Answer:** 2, 5 
+2024-11-13 15:05:46,590:ERROR:Invalid answer format in row 251: **New Answer:** 1, 2 
+2024-11-13 15:05:52,931:ERROR:Invalid answer format in row 251: **New Answer:** 1, 2, 3 
+2024-11-13 15:14:47,764:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 15:14:51,966:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 15:16:18,901:ERROR:Invalid answer format in row 310: **New Answer:** 1, 2 
+2024-11-13 15:19:55,015:ERROR:Invalid answer format in row 332: **New Answer:** 1 & 2 
+2024-11-13 15:32:03,182:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.text` quick accessor requires the response to contain a valid `Part`, but none were returned. The candidate's [finish_reason](https://ai.google.dev/api/generate-content#finishreason) is 5.
+2024-11-13 15:35:19,284:ERROR:Invalid answer format in row 422: **New Answer:** 1, 2
+2024-11-13 15:35:42,650:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 15:35:46,849:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 15:39:02,757:ERROR:Invalid answer format in row 444: **New Answer:** 2, 5 
+2024-11-13 15:40:19,045:ERROR:Invalid answer format in row 453: **New Answer:** 5 (정답 없음) 
+2024-11-13 15:41:03,237:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.text` quick accessor requires the response to contain a valid `Part`, but none were returned. The candidate's [finish_reason](https://ai.google.dev/api/generate-content#finishreason) is 5.
+2024-11-13 15:41:49,597:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 15:41:53,805:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 15:44:12,407:ERROR:Invalid answer format in row 477: **New Answer:** 1 또는 2 (둘 다 가능) 
+2024-11-13 15:45:08,312:ERROR:Invalid answer format in row 483: **New Answer:** 1, 2
+2024-11-13 15:45:14,854:ERROR:Invalid answer format in row 483: **New Answer:** 2 & 4 
+2024-11-13 15:55:11,718:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 15:55:15,921:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 16:01:45,962:ERROR:Invalid answer format in row 587: **New Answer:** 1, 2, 3 (정답은 1, 2, 3 중 하나임) 
+2024-11-13 16:03:56,567:ERROR:Invalid answer format in row 599: **New Answer:** 1, 2, 3, 4, 5 (모두 정답) 
+2024-11-13 16:10:50,215:ERROR:Invalid answer format in row 634: **New Answer:** 1, 2 
+2024-11-13 16:14:51,267:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
+2024-11-13 16:14:55,451:ERROR:질문 생성 중 오류 발생: Invalid operation: The `response.parts` quick accessor requires a single candidate, but but `response.candidates` is empty.
+This appears to be caused by a blocked prompt, see `response.prompt_feedback`: block_reason: OTHER
+
