@@ -4,13 +4,13 @@ import time
 from tqdm import tqdm
 import ast
 import logging
-import json
+import re
 
 logging.basicConfig(filename='data_augmentation_errors.log', level=logging.ERROR,
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
 # Gemini API 설정
-api_key = "AIzaSyAApFKuhn0W0WzEFb3x5unmh75wg76WT1Q"
+api_key = "AIzaSyD0IrkE8UxmhUtAp25NiqiyBNhpuKomCdE"
 genai.configure(api_key=api_key)
 
 safety_settings = [
@@ -65,7 +65,7 @@ def generate_question(paragraph, original_question, original_choices, original_a
     2. Consider the original question and how it relates to the paragraph.
     3. Formulate a new question that tests understanding of the paragraph in a different way.
     4. Create 5 answer choices, including the correct answer and 4 plausible distractors.
-    5. Choose the correct answer (1, 2, 3, 4, or 5).
+    5. Choose the "ONLY ONE" correct answer (1, 2, 3, 4, or 5).
     6. Question, Choices, Answer MUST BE Korean
     7. Provide your response just like in the following format.:
     
