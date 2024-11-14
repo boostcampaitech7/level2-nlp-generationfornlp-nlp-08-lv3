@@ -2,7 +2,7 @@ import re
 import pandas as pd # type: ignore
 import ast
 
-input_file_path = '/Users/idahyeon/Downloads/nlp_project4/train.csv'
+input_file_path = '/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/sungeun/data/test.csv'
 df = pd.read_csv(input_file_path) 
 
 def clean_text(text):
@@ -40,7 +40,7 @@ def clean_column(value):
 
 df = df.applymap(clean_column)
 
-output_file_path = 'train_cleaned.csv'
+output_file_path = '/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/data/test_cleaned.csv'
 
 df.to_csv(output_file_path, index=False)
 
