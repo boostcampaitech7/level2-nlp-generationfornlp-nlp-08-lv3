@@ -13,6 +13,7 @@ def load_and_process_data(data_path):
     records = []
     for _, row in dataset.iterrows():
         problems = literal_eval(row['problems'])
+        problems['choices'].append('정답 없음') # 추가
         record = {
             'id': row['id'],
             'paragraph': row['paragraph'],
@@ -90,6 +91,7 @@ def process_dataset_with_prompts(df):
                 "id": dataset[i]["id"],
                 "messages": [
                     {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
+                    # 지문을 읽고 질문의 답을 구하세요.
                     {"role": "user", "content": user_message},
                     {"role": "assistant", "content": f"{dataset[i]['answer']}"}
                 ],
@@ -139,7 +141,7 @@ def process_and_tokenize_dataset(processed_dataset, tokenizer):
 
 
 def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, seed=42):
-    # 1024 토큰 이하의 데이터만 필터링
+    # max_length 토큰 이하의 데이터만 필터링
     tokenized_dataset = tokenized_dataset.filter(lambda x: len(x["input_ids"]) <= max_length)
 
     # 훈련 및 검증 데이터셋 분리
