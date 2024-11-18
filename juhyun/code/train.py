@@ -45,6 +45,7 @@ processed_train_data = process_dataset_with_prompts(train_data)
 model = AutoModelForCausalLM.from_pretrained(config["model_name"], torch_dtype=torch.float16, trust_remote_code=True,)
 tokenizer = AutoTokenizer.from_pretrained(config["model_name"], trust_remote_code=True,)
 
+
 # 채팅 템플릿 설정
 tokenizer.chat_template = "{% if messages[0]['role'] == 'system' %}{% set system_message = messages[0]['content'] %}{% endif %}{% if system_message is defined %}{{ system_message }}{% endif %}{% for message in messages %}{% set content = message['content'] %}{% if message['role'] == 'user' %}{{ '<start_of_turn>user\\n' + content + '<end_of_turn>\\n<start_of_turn>model\\n' }}{% elif message['role'] == 'assistant' %}{{ content + '<end_of_turn>\\n' }}{% endif %}{% endfor %}"
 
@@ -52,7 +53,7 @@ tokenizer.chat_template = "{% if messages[0]['role'] == 'system' %}{% set system
 tokenized_train_data = process_and_tokenize_dataset(processed_train_data, tokenizer)
 
 # 데이터 분리 및 필터링
-train_dataset, eval_dataset = filter_and_split_dataset(tokenized_train_data, max_length=1024, test_size=0.1, seed=config["random_seed"])
+train_dataset, eval_dataset = filter_and_split_dataset(tokenized_train_data, max_length=2048, test_size=0.1, seed=config["random_seed"])
 
 # Completion 부분만 학습하기 위한 Data Collator 설정
 response_template = "<start_of_turn>model"
