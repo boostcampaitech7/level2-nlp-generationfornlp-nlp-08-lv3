@@ -46,19 +46,19 @@ processed_train_data = process_dataset_with_prompts(train_data)
 
 
 # 4bit 양자화 설정
-# bnb_config = BitsAndBytesConfig(
-#     load_in_4bit=True,
-#     bnb_4bit_quant_type="nf4",
-#     bnb_4bit_use_double_quant=True,
-#     bnb_4bit_compute_dtype=torch.bfloat16,
-# )
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
 
 model = AutoModelForCausalLM.from_pretrained(
     config["model_name"], 
     torch_dtype=torch.float16,
     trust_remote_code=True,
     device_map="auto",  # 양자화 지원 장치에 자동 매핑
-    # quantization_config=bnb_config,
+    quantization_config=bnb_config,
 )
 tokenizer = AutoTokenizer.from_pretrained(
     config["model_name"],

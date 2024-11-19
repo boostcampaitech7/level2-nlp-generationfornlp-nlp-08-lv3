@@ -2,6 +2,6 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1")
+model = AutoModelForCausalLM.from_pretrained("beomi/Qwen2.5-7B-Instruct-kowiki-qa-context")
 
 print(model)
