@@ -3,6 +3,7 @@ import pandas as pd
 from ast import literal_eval
 from sklearn.feature_extraction.text import TfidfVectorizer
 from datasets import Dataset
+from transformers import BitsAndBytesConfig
 
 def load_and_process_data(data_path):
     # 데이터셋 로드
