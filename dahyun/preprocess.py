@@ -1,23 +1,26 @@
 import re
-import pandas as pd # type: ignore
+import pandas as pd
 import ast
 
-input_file_path = '/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/sungeun/data/test.csv'
+input_file_path = '/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/sungeun/data/new_train3_cleaned286.csv'
 df = pd.read_csv(input_file_path) 
 
 def clean_text(text):
-    text = text.replace('\xa0', '') 
-    text = re.sub(r'\s+', ' ', text) 
-    text = text.replace('...', '')  
-    text = text.replace('. . .', '')
-    text = text.replace('. .', '')
+    #text = text.replace('\xa0', '') 
+    #text = re.sub(r' {2,}', ' ', text)
+    # text = text.replace('...', '')  
+    # text = text.replace('. . .', '')
+    # text = text.replace('. .', '')
     text = text.replace('…', '')
-    text = text.replace(' .', '.')
+    # text = text.replace(' .', '.')
     return text.strip()
 
 
 def clean_list_text(list_text):
-    return [clean_text(item) for item in list_text]
+    cleaned_list = [clean_text(item) for item in list_text]
+    if len(cleaned_list) == 4:
+        cleaned_list.append(' ')
+    return cleaned_list
 
 def clean_column(value):
     if isinstance(value, str):
@@ -40,7 +43,7 @@ def clean_column(value):
 
 df = df.applymap(clean_column)
 
-output_file_path = '/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/data/test_cleaned.csv'
+output_file_path = '/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/data/new_train.csv'
 
 df.to_csv(output_file_path, index=False)
 

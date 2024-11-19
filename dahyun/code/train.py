@@ -15,7 +15,7 @@ from data_processing import (
 from trl import DataCollatorForCompletionOnlyLM, SFTConfig, SFTTrainer
 from transformers import TrainerCallback, AutoModelForCausalLM, AutoTokenizer
 import evaluate  # 메트릭 평가 라이브러리
-import pandas pd
+import pandas as pd
 
 # Config 파일 로드
 with open("config.json", "r") as f:
@@ -38,7 +38,7 @@ train_data = load_and_process_data(config["train_data_path"])
 train_data = concat_question_and_question_plus(train_data)
 
 # TF-IDF 특성 생성
-tfidf_features = compute_tfidf_features(train_data, max_features=config["max_features"])
+#tfidf_features = compute_tfidf_features(train_data, max_features=config["max_features"])
 
 # 프롬프트 적용 데이터셋 생성
 processed_train_data = process_dataset_with_prompts(train_data)
@@ -53,7 +53,11 @@ tokenizer.chat_template = "{% if messages[0]['role'] == 'system' %}{% set system
 tokenized_train_data = process_and_tokenize_dataset(processed_train_data, tokenizer)
 
 # 데이터 분리 및 필터링
-train_dataset, eval_dataset = filter_and_split_dataset(tokenized_train_data, max_length=1024, test_size=0.1, seed=config["random_seed"])
+train_dataset, eval_dataset, train_indices, eval_indices= filter_and_split_dataset(tokenized_train_data, max_length=1024, test_size=0.1, seed=config["random_seed"])
+
+# 원본 eval 데이터셋
+train_data = pd.read_csv(config["train_data_path"])
+eval_data_df = train_data.loc[eval_indices].reset_index(drop=True)
 
 # Completion 부분만 학습하기 위한 Data Collator 설정
 response_template = "<start_of_turn>model"
@@ -97,29 +101,27 @@ def compute_metrics(evaluation_result):
     acc = acc_metric.compute(predictions=predictions, references=labels)
 
     # index값에서 실제 값으로 변경
+    predictions = predictions.tolist() 
     predictions = [pred + 1 for pred in predictions]
     labels = [label + 1 for label in labels]
 
-    # 맞춘 경우와 맞추지 못한 경우 분리하기 위해 새로운 열을 추가
-    train_data["Prediction"] = predictions
-    train_data["Correct"] = train_data["Prediction"] == labels
+    # 평가 데이터프레임에 예측 결과와 정답 여부 추가
+    eval_data_df["Prediction"] = predictions
+    eval_data_df["Label"] = labels
+    eval_data_df["Correct"] = eval_data_df["Prediction"] == eval_data_df["Label"]
 
-    # 맞춘 경우와 맞추지 못한 경우로 분리
-    correct_cases_df = train_data[train_data["Correct"] == True]
-    incorrect_cases_df = train_data[train_data["Correct"] == False]
+    # 맞춘 경우와 맞추지 못한 경우로 평가 데이터셋 분리
+    correct_eval_data_df = eval_data_df[eval_data_df["Correct"] == True]
+    incorrect_eval_data_df = eval_data_df[eval_data_df["Correct"] == False]
 
-    # CSV 파일로 저장
+    # 맞춘 경우와 틀린 경우를 각각 CSV 파일로 저장
     correct_cases_path = os.path.join(config["output_dir"], "correct_cases.csv")
     incorrect_cases_path = os.path.join(config["output_dir"], "incorrect_cases.csv")
-    full_with_predictions_path = os.path.join(config["output_dir"], "train_predictions.csv")
+    full_with_predictions_path = os.path.join(config["output_dir"], "eval_data.csv")
 
-    correct_cases_df.to_csv(correct_cases_path, index=False)
-    incorrect_cases_df.to_csv(incorrect_cases_path, index=False)
-    train_data.to_csv(full_with_predictions_path, index=False)  # 예측 열이 추가된 전체 데이터 저장
-
-    # Prediction과 Correct 열 삭제
-    train_data = train_data.drop(columns=["Prediction", "Correct"])
-
+    correct_eval_data_df.to_csv(correct_cases_path, index=False)  
+    incorrect_eval_data_df.to_csv(incorrect_cases_path, index=False)  
+    eval_data_df.to_csv(full_with_predictions_path, index=False)  
 
     return acc
 
@@ -184,7 +186,8 @@ trainer = SFTTrainer(
 )
 
 # 체크포인트에서 이어서 학습
-checkpoint_path = config.get("checkpoint_path")
+#checkpoint_path = config.get("checkpoint_path")
+checkpoint_path = " "
 if checkpoint_path and os.path.exists(checkpoint_path):
     print(f"Resuming training from checkpoint: {checkpoint_path}")
     trainer.train(resume_from_checkpoint=checkpoint_path)

@@ -5,8 +5,23 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 from data_processing import load_and_process_data, format_test_data_for_model  # 데이터 로드 및 전처리 함수
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, BitsAndBytesConfig
 from peft import AutoPeftModelForCausalLM
+import random
+
+
+# 시드 고정 함수
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if using multi-GPU
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+# 시드 고정
+set_seed(42)
 
 # Config 파일 로드
 with open("config.json", "r", encoding="utf-8") as f:
@@ -14,15 +29,34 @@ with open("config.json", "r", encoding="utf-8") as f:
 
 checkpoint_path = config["checkpoint_path"]
 
+
+# 4bit 양자화 설정
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
 model = AutoPeftModelForCausalLM.from_pretrained(
     checkpoint_path,
     trust_remote_code=True,
-    # torch_dtype=torch.bfloat16,
-    device_map="auto",
+    device_map="auto",  # 양자화 지원 장치에 자동 매핑
+    quantization_config=bnb_config,
+    torch_dtype=torch.float16,
+    low_cpu_mem_usage=True
 )
+# model = AutoPeftModelForCausalLM.from_pretrained(
+#     checkpoint_path,
+#     trust_remote_code=True,
+#     # torch_dtype=torch.bfloat16,
+#     device_map="auto",
+#     load_in_4bit=True
+# )
+
 tokenizer = AutoTokenizer.from_pretrained(
     checkpoint_path,
     trust_remote_code=True,
+    low_cpu_mem_usage=True
 )
 
 # 테스트 데이터 로드 및 전처리
@@ -31,7 +65,14 @@ test_dataset = format_test_data_for_model(test_df)
 
 # 추론 및 결과 저장
 infer_results = []
-pred_choices_map = {0: "1", 1: "2", 2: "3", 3: "4", 4: "5"}
+pred_choices_map = {
+    0: "1",
+    1: "2",
+    2: "3",
+    3: "4",
+    4: "5",
+    5: lambda: random.choice(["1", "2", "3", "4", "5"])
+}
 
 model.eval()
 with torch.inference_mode():
@@ -61,7 +102,16 @@ with torch.inference_mode():
             .numpy()
         )
 
-        predict_value = pred_choices_map[np.argmax(probs, axis=-1)]
+        # predict_value = pred_choices_map[np.argmax(probs, axis=-1)]
+        # infer_results.append({"id": _id, "answer": predict_value})
+        
+        predict_idx = np.argmax(probs, axis=-1)
+        predict_value = pred_choices_map[predict_idx]
+        
+        # lambda 함수일 경우 호출하여 랜덤 선택
+        if callable(predict_value):
+            predict_value = predict_value()
+        
         infer_results.append({"id": _id, "answer": predict_value})
 
 # CSV 파일로 결과 저장
