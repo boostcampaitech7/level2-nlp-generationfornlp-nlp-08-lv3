@@ -30,25 +30,15 @@ def load_and_process_data(data_path):
 
     return df
 
-def concat_question_and_question_plus(df):
-    # 'question'과 'question_plus' 컬럼 결합
-    df['question_plus'] = df['question_plus'].fillna('')
-    df['full_question'] = df.apply(lambda x: x['question'] + ' ' + x['question_plus'] if x['question_plus'] else x['question'], axis=1)
+# def concat_question_and_question_plus(df):
+#     # 'question'과 'question_plus' 컬럼 결합
+#     df['question_plus'] = df['question_plus'].fillna('')
+#     df['full_question'] = df.apply(lambda x: x['question'] + ' ' + x['question_plus'] if x['question_plus'] else x['question'], axis=1)
 
-    # 각 질문의 길이를 계산
-    df['question_length'] = df['full_question'].apply(len)
+#     # 각 질문의 길이를 계산
+#     df['question_length'] = df['full_question'].apply(len)
     
-    return df
-
-
-def compute_tfidf_features(df, max_features=1000):
-    # TF-IDF 벡터화 수행
-    tfidf_vectorizer = TfidfVectorizer(max_features=max_features)
-    tfidf_matrix = tfidf_vectorizer.fit_transform(df['full_question'])
-    
-    # DataFrame 형태로 변환하여 반환
-    tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vectorizer.get_feature_names_out())
-    return tfidf_df
+#     return df
 
 
 # Config 파일에서 프롬프트 경로 불러오기
@@ -138,7 +128,7 @@ def process_and_tokenize_dataset(processed_dataset, tokenizer):
     return tokenized_dataset
 
 
-def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, seed=42):
+def filter_and_split_dataset(tokenized_dataset, max_length=2048, test_size=0.1, seed=42):
 
     # 원본 인덱스를 유지하기 위해 인덱스를 새로운 열에 저장
     tokenized_dataset = tokenized_dataset.map(lambda x, idx: {**x, "original_index": idx}, with_indices=True)

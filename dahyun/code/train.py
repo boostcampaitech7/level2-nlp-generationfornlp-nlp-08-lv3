@@ -6,16 +6,15 @@ import os
 from utils import get_peft_config
 from data_processing import (
     load_and_process_data,
-    concat_question_and_question_plus,
-    compute_tfidf_features,
+    #concat_question_and_question_plus,
     process_dataset_with_prompts,
     process_and_tokenize_dataset,
-    filter_and_split_dataset
+    filter_and_split_dataset, 
 )
 from trl import DataCollatorForCompletionOnlyLM, SFTConfig, SFTTrainer
-from transformers import TrainerCallback, AutoModelForCausalLM, AutoTokenizer
+from transformers import TrainerCallback, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import evaluate  # 메트릭 평가 라이브러리
-import pandas as pd
+import bitsandbytes as bnb
 
 # Config 파일 로드
 with open("config.json", "r") as f:
@@ -34,33 +33,43 @@ def set_seed(random_seed):
 set_seed(42) # magic number :)
 
 # 데이터 로드 및 전처리
-train_data = load_and_process_data(config["train_data_path"])
-train_data = concat_question_and_question_plus(train_data)
-
-# TF-IDF 특성 생성
-#tfidf_features = compute_tfidf_features(train_data, max_features=config["max_features"])
+train_data = load_and_process_data(config["train_data_path"]) # DataFrame으로 변환
+#train_data = concat_question_and_question_plus(train_data) 
 
 # 프롬프트 적용 데이터셋 생성
 processed_train_data = process_dataset_with_prompts(train_data)
 
-model = AutoModelForCausalLM.from_pretrained(config["model_name"], torch_dtype=torch.float16, trust_remote_code=True,)
+
+# 4bit 양자화 설정
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    config["model_name"], 
+    torch_dtype=torch.float16,
+    trust_remote_code=True,
+    device_map="auto",  # 양자화 지원 장치에 자동 매핑
+    quantization_config=bnb_config
+)
 tokenizer = AutoTokenizer.from_pretrained(config["model_name"], trust_remote_code=True,)
 
+
 # 채팅 템플릿 설정
-tokenizer.chat_template = "{% if messages[0]['role'] == 'system' %}{% set system_message = messages[0]['content'] %}{% endif %}{% if system_message is defined %}{{ system_message }}{% endif %}{% for message in messages %}{% set content = message['content'] %}{% if message['role'] == 'user' %}{{ '<start_of_turn>user\\n' + content + '<end_of_turn>\\n<start_of_turn>model\\n' }}{% elif message['role'] == 'assistant' %}{{ content + '<end_of_turn>\\n' }}{% endif %}{% endfor %}"
+#tokenizer.chat_template = "{% if messages[0]['role'] == 'system' %}{% set system_message = messages[0]['content'] %}{% endif %}{% if system_message is defined %}{{ system_message }}{% endif %}{% for message in messages %}{% set content = message['content'] %}{% if message['role'] == 'user' %}{{ '<start_of_turn>user\\n' + content + '<end_of_turn>\\n<start_of_turn>model\\n' }}{% elif message['role'] == 'assistant' %}{{ content + '<end_of_turn>\\n' }}{% endif %}{% endfor %}"
+tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
 # 데이터셋 토큰화
 tokenized_train_data = process_and_tokenize_dataset(processed_train_data, tokenizer)
 
 # 데이터 분리 및 필터링
-train_dataset, eval_dataset, train_indices, eval_indices= filter_and_split_dataset(tokenized_train_data, max_length=1024, test_size=0.1, seed=config["random_seed"])
-
-# 원본 eval 데이터셋
-train_data = pd.read_csv(config["train_data_path"])
-eval_data_df = train_data.loc[eval_indices].reset_index(drop=True)
+train_dataset, eval_dataset = filter_and_split_dataset(tokenized_train_data, max_length=2048, test_size=0.1, seed=config["random_seed"])
 
 # Completion 부분만 학습하기 위한 Data Collator 설정
-response_template = "<start_of_turn>model"
+response_template = "<|assistant|>"
 data_collator = DataCollatorForCompletionOnlyLM(
     response_template=response_template,
     tokenizer=tokenizer,
@@ -99,30 +108,6 @@ def compute_metrics(evaluation_result):
     probs = torch.nn.functional.softmax(torch.tensor(logits), dim=-1)
     predictions = np.argmax(probs, axis=-1)
     acc = acc_metric.compute(predictions=predictions, references=labels)
-
-    # index값에서 실제 값으로 변경
-    predictions = predictions.tolist() 
-    predictions = [pred + 1 for pred in predictions]
-    labels = [label + 1 for label in labels]
-
-    # 평가 데이터프레임에 예측 결과와 정답 여부 추가
-    eval_data_df["Prediction"] = predictions
-    eval_data_df["Label"] = labels
-    eval_data_df["Correct"] = eval_data_df["Prediction"] == eval_data_df["Label"]
-
-    # 맞춘 경우와 맞추지 못한 경우로 평가 데이터셋 분리
-    correct_eval_data_df = eval_data_df[eval_data_df["Correct"] == True]
-    incorrect_eval_data_df = eval_data_df[eval_data_df["Correct"] == False]
-
-    # 맞춘 경우와 틀린 경우를 각각 CSV 파일로 저장
-    correct_cases_path = os.path.join(config["output_dir"], "correct_cases.csv")
-    incorrect_cases_path = os.path.join(config["output_dir"], "incorrect_cases.csv")
-    full_with_predictions_path = os.path.join(config["output_dir"], "eval_data.csv")
-
-    correct_eval_data_df.to_csv(correct_cases_path, index=False)  
-    incorrect_eval_data_df.to_csv(incorrect_cases_path, index=False)  
-    eval_data_df.to_csv(full_with_predictions_path, index=False)  
-
     return acc
 
 # LoRA 설정 가져오기
@@ -186,10 +171,10 @@ trainer = SFTTrainer(
 )
 
 # 체크포인트에서 이어서 학습
-#checkpoint_path = config.get("checkpoint_path")
-checkpoint_path = " "
+checkpoint_path = config.get("checkpoint_path")
 if checkpoint_path and os.path.exists(checkpoint_path):
     print(f"Resuming training from checkpoint: {checkpoint_path}")
     trainer.train(resume_from_checkpoint=checkpoint_path)
 else:
+    torch.cuda.empty_cache()
     trainer.train()  # 처음부터 학습 시작
