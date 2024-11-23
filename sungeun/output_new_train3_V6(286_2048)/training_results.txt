@@ -1,15 +1,15 @@
 Epoch : 1,
-Training Loss : 0.131700,
-Validation Loss : 0.092735,
-Accuracy : 0.437333
+Training Loss : 0.135000,
+Validation Loss : 0.093031,
+Accuracy : 0.614286
 #########################
 Epoch : 2,
-Training Loss : 0.083700,
-Validation Loss : 0.096346,
-Accuracy : 0.362667
+Training Loss : 0.084600,
+Validation Loss : 0.086245,
+Accuracy : 0.589286
 #########################
 Epoch : 3,
-Training Loss : 0.076900,
-Validation Loss : 0.100742,
-Accuracy : 0.360000
+Training Loss : 0.075900,
+Validation Loss : 0.095073,
+Accuracy : 0.564286
 #########################
