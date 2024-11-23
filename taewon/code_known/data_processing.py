@@ -3,6 +3,7 @@ import pandas as pd
 from ast import literal_eval
 from sklearn.feature_extraction.text import TfidfVectorizer
 from datasets import Dataset
+from transformers import BitsAndBytesConfig
 
 def load_and_process_data(data_path):
     # 데이터셋 로드
@@ -13,12 +14,14 @@ def load_and_process_data(data_path):
     records = []
     for _, row in dataset.iterrows():
         problems = literal_eval(row['problems'])
+        problems['choices'].append('정답 없음') # 추가
         record = {
             'id': row['id'],
             'paragraph': row['paragraph'],
             'question': problems['question'],
             'choices': problems['choices'],
             'answer': problems.get('answer', None),
+            'hint': row['hint'],
             'question_plus': problems.get('question_plus', None),
         }
         if 'question_plus' in problems:
@@ -63,6 +66,8 @@ def load_prompt_template(filepath):
 # 프롬프트 템플릿 로드
 PROMPT_NO_QUESTION_PLUS = load_prompt_template(config["prompts"]["PROMPT_NO_QUESTION_PLUS_PATH"])
 PROMPT_QUESTION_PLUS = load_prompt_template(config["prompts"]["PROMPT_QUESTION_PLUS_PATH"])
+PROMPT_TEST_NO_QUESTION_PLUS = load_prompt_template(config["prompts"]["PROMPT_TEST_NO_QUESTION_PLUS_PATH"])
+PROMPT_TEST_QUESTION_PLUS = load_prompt_template(config["prompts"]["PROMPT_TEST_QUESTION_PLUS_PATH"])
 
 def process_dataset_with_prompts(df):
     dataset = Dataset.from_pandas(df)
@@ -76,6 +81,7 @@ def process_dataset_with_prompts(df):
                 paragraph=dataset[i]["paragraph"],
                 question=dataset[i]["question"],
                 question_plus=dataset[i]["question_plus"],
+                hint = dataset[i]["hint"],
                 choices=choices_string,
             )
         else:
@@ -83,6 +89,7 @@ def process_dataset_with_prompts(df):
                 paragraph=dataset[i]["paragraph"],
                 question=dataset[i]["question"],
                 choices=choices_string,
+                hint = dataset[i]["hint"],
             )
         
         processed_dataset.append(
@@ -90,6 +97,7 @@ def process_dataset_with_prompts(df):
                 "id": dataset[i]["id"],
                 "messages": [
                     {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
+                    # 지문을 읽고 질문의 답을 구하세요.
                     {"role": "user", "content": user_message},
                     {"role": "assistant", "content": f"{dataset[i]['answer']}"}
                 ],
@@ -139,10 +147,22 @@ def process_and_tokenize_dataset(processed_dataset, tokenizer):
 
 
 def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, seed=42):
-    # 1024 토큰 이하의 데이터만 필터링
+    original_size = len(tokenized_dataset)
+    max_len_original = max(len(x["input_ids"]) for x in tokenized_dataset)
+    # max_length 토큰 이하의 데이터만 필터링
     tokenized_dataset = tokenized_dataset.filter(lambda x: len(x["input_ids"]) <= max_length)
-
-    # 훈련 및 검증 데이터셋 분리
+    filtered_size = len(tokenized_dataset)
+    
+    # 누락된 데이터 계산
+    missing_count = original_size - filtered_size
+    missing_ratio = (missing_count / original_size) * 100
+    
+    print(f"######### 데이터 필터링 결과 #########")
+    print(f"총 데이터 개수: {original_size}")
+    print(f"필터링 전 가장 긴 문자열의 길이: {max_len_original}")
+    print(f"max_length={max_length} 조건에 따라 누락된 데이터 개수: {missing_count} ({missing_ratio:.2f}%)")
+    print(f"필터링 후 남은 데이터 개수: {filtered_size}")
+    
     tokenized_dataset = tokenized_dataset.train_test_split(test_size=test_size, seed=seed)
     train_dataset = tokenized_dataset['train']
     eval_dataset = tokenized_dataset['test']
@@ -159,7 +179,7 @@ def format_test_data_for_model(test_df):
 
         # <보기>가 있을 때
         if row["question_plus"]:
-            user_message = PROMPT_QUESTION_PLUS.format(
+            user_message = PROMPT_TEST_QUESTION_PLUS.format(
                 paragraph=row["paragraph"],
                 question=row["question"],
                 question_plus=row["question_plus"],
@@ -167,7 +187,7 @@ def format_test_data_for_model(test_df):
             )
         # <보기>가 없을 때
         else:
-            user_message = PROMPT_NO_QUESTION_PLUS.format(
+            user_message = PROMPT_TEST_NO_QUESTION_PLUS.format(
                 paragraph=row["paragraph"],
                 question=row["question"],
                 choices=choices_string,
