@@ -33,6 +33,34 @@ def load_and_process_data(data_path):
 
     return df
 
+def load_and_process_test_data(data_path):
+    # 데이터셋 로드
+    dataset = pd.read_csv(data_path)
+    # dataset = dataset[:30] # 빠르게 실행해볼때
+    
+    # JSON 형식의 데이터를 펼쳐서 새로운 DataFrame 생성
+    records = []
+    for _, row in dataset.iterrows():
+        #problems = literal_eval(row['problems'])
+        row['choices'].append('정답 없음') # 추가
+        record = {
+            'id': row['id'],
+            'paragraph': row['paragraph'],
+            'question': row['question'],
+            'choices': literal_eval(row['choices']),
+            'answer': None,
+            'hint': row['hint'],
+            'question_plus': row.get('question_plus', None),
+        }
+        if 'question_plus' in row:
+            record['question_plus'] = row['question_plus']
+        records.append(record)
+        
+    # DataFrame으로 변환
+    df = pd.DataFrame(records)
+
+    return df
+
 def concat_question_and_question_plus(df):
     # 'question'과 'question_plus' 컬럼 결합
     df['question_plus'] = df['question_plus'].fillna('')
@@ -183,6 +211,7 @@ def format_test_data_for_model(test_df):
                 paragraph=row["paragraph"],
                 question=row["question"],
                 question_plus=row["question_plus"],
+                hint = row["hint"],
                 choices=choices_string,
             )
         # <보기>가 없을 때
@@ -190,6 +219,7 @@ def format_test_data_for_model(test_df):
             user_message = PROMPT_TEST_NO_QUESTION_PLUS.format(
                 paragraph=row["paragraph"],
                 question=row["question"],
+                hint = row["hint"],
                 choices=choices_string,
             )
 

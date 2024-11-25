@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import torch
 from tqdm import tqdm
-from data_processing import load_and_process_data, format_test_data_for_model# 데이터 로드 및 전처리 함수
+from data_processing import load_and_process_test_data, format_test_data_for_model# 데이터 로드 및 전처리 함수
 from transformers import AutoTokenizer, BitsAndBytesConfig
 from peft import AutoPeftModelForCausalLM
 import random
@@ -51,7 +51,7 @@ tokenizer = AutoTokenizer.from_pretrained(
 )
 
 # 테스트 데이터 로드 및 전처리
-test_df = load_and_process_data(config["test_data_path"])
+test_df = load_and_process_test_data(config["test_data_path"])
 test_dataset = format_test_data_for_model(test_df)
 
 # 추론 및 결과 저장
@@ -106,5 +106,5 @@ with torch.inference_mode():
         infer_results.append({"id": _id, "answer": predict_value})
 
 # CSV 파일로 결과 저장
-output_file_path = os.path.join(config["output_dir"], "output.csv")
+output_file_path = os.path.join(config["output_dir"], "output_known.csv")
 pd.DataFrame(infer_results).to_csv(output_file_path, index=False)

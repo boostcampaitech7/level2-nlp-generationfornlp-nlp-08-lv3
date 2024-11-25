@@ -4,7 +4,7 @@
     "test_data_path": "../data/test_odqa.csv",
     "output_dir": "../output_odqa_model",
     "model_name": "Qwen/Qwen2.5-7B-Instruct",
-    "checkpoint_path": "../output_odqa_model/checkpoint-5460",
+    "checkpoint_path": "../output_odqa_model/checkpoint-2078",
     "max_features": 1000,
     "use_lora": true,
     "lora_r": 6,
@@ -35,10 +35,10 @@
     },
 
     "prompts": {
-        "PROMPT_NO_QUESTION_PLUS_PATH": "../prompts_ver1/prompt_no_question_plus.txt",
-        "PROMPT_QUESTION_PLUS_PATH": "../prompts_ver1/prompt_question_plus.txt",
-        "PROMPT_TEST_NO_QUESTION_PLUS_PATH": "../prompts_ver2/prompt_test_no_question_plus.txt",
-        "PROMPT_TEST_QUESTION_PLUS_PATH": "../prompts_ver2/prompt_test_question_plus.txt"
+        "PROMPT_NO_QUESTION_PLUS_PATH": "../prompts_ver1/prompt_no_question_plus_odqa.txt",
+        "PROMPT_QUESTION_PLUS_PATH": "../prompts_ver1/prompt_question_plus_odqa.txt",
+        "PROMPT_TEST_NO_QUESTION_PLUS_PATH": "../prompts_ver2/prompt_test_no_question_plus_odqa.txt",
+        "PROMPT_TEST_QUESTION_PLUS_PATH": "../prompts_ver2/prompt_test_question_plus_odqa.txt"
     },
 
     "accelerate_config": {
