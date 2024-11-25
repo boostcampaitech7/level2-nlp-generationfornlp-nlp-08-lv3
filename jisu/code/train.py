@@ -10,13 +10,12 @@ from data_processing import (
     compute_tfidf_features,
     process_dataset_with_prompts,
     process_and_tokenize_dataset,
-    filter_and_split_dataset
+    filter_and_split_dataset, 
 )
 from trl import DataCollatorForCompletionOnlyLM, SFTConfig, SFTTrainer
 from transformers import TrainerCallback, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import evaluate  # 메트릭 평가 라이브러리
 import bitsandbytes as bnb
-
 
 # Config 파일 로드
 with open("config.json", "r") as f:
@@ -58,12 +57,9 @@ model = AutoModelForCausalLM.from_pretrained(
     torch_dtype=torch.float16,
     trust_remote_code=True,
     device_map="auto",  # 양자화 지원 장치에 자동 매핑
-    quantization_config=bnb_config,
+    quantization_config=bnb_config
 )
-tokenizer = AutoTokenizer.from_pretrained(
-    config["model_name"],
-    trust_remote_code=True,
-)
+tokenizer = AutoTokenizer.from_pretrained(config["model_name"], trust_remote_code=True,)
 
 
 # 채팅 템플릿 설정
@@ -89,9 +85,6 @@ tokenizer.padding_side = 'right'
 
 # config 파일의 sft_config 파라미터 사용하여 SFTConfig 초기화
 sft_config = SFTConfig(**config["sft_config"])
-
-if sft_config.gradient_checkpointing:
-    model.gradient_checkpointing_enable()
 
 ### Metric 설정
 def preprocess_logits_for_metrics(logits, labels):

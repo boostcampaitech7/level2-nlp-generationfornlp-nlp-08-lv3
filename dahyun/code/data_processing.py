@@ -13,6 +13,7 @@ def load_and_process_data(data_path):
     records = []
     for _, row in dataset.iterrows():
         problems = literal_eval(row['problems'])
+        problems['choices'].append('정답 없음') # 추가
         record = {
             'id': row['id'],
             'paragraph': row['paragraph'],
@@ -89,7 +90,8 @@ def process_dataset_with_prompts(df):
             {
                 "id": dataset[i]["id"],
                 "messages": [
-                    {"role": "system", "content": "당신은 지문의 내용을 바탕으로 질문의 답을 선택지중에 고르는 AI 입니다. 지문을 읽고 질문의 답을 구하세요."},
+                    {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
+                    # 지문을 읽고 질문의 답을 구하세요.
                     {"role": "user", "content": user_message},
                     {"role": "assistant", "content": f"{dataset[i]['answer']}"}
                 ],
@@ -139,11 +141,7 @@ def process_and_tokenize_dataset(processed_dataset, tokenizer):
 
 
 def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, seed=42):
-
-    # 원본 인덱스를 유지하기 위해 인덱스를 새로운 열에 저장
-    tokenized_dataset = tokenized_dataset.map(lambda x, idx: {**x, "original_index": idx}, with_indices=True)
-
-    # 1024 토큰 이하의 데이터만 필터링
+    # max_length 토큰 이하의 데이터만 필터링
     tokenized_dataset = tokenized_dataset.filter(lambda x: len(x["input_ids"]) <= max_length)
 
     # 훈련 및 검증 데이터셋 분리
@@ -151,15 +149,8 @@ def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, 
     train_dataset = tokenized_dataset['train']
     eval_dataset = tokenized_dataset['test']
     
-    # 학습 및 검증 데이터의 인덱스를 추출하여 리스트로 저장
-    train_indices = train_dataset["original_index"]
-    eval_indices = eval_dataset["original_index"]
+    return train_dataset, eval_dataset
 
-    # 학습 및 평가 데이터셋에서 original_index 제거
-    train_dataset = train_dataset.remove_columns("original_index")
-    eval_dataset = eval_dataset.remove_columns("original_index")
-    # 학습 데이터, 평가 데이터, 그리고 각 인덱스 반환
-    return train_dataset, eval_dataset, train_indices, eval_indices
 
 def format_test_data_for_model(test_df):
     # 테스트 데이터셋 가공
@@ -188,7 +179,7 @@ def format_test_data_for_model(test_df):
             {
                 "id": row["id"],
                 "messages": [
-                    {"role": "system", "content": "당신은 지문의 내용을 바탕으로 질문의 답을 선택지중에 고르는 AI 입니다. 지문을 읽고 질문의 답을 구하세요."},
+                    {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
                     {"role": "user", "content": user_message},
                 ],
                 "label": row["answer"],

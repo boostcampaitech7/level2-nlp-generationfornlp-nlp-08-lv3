@@ -1,6 +1,5 @@
 
 
-
 # 보기 및 정답 생성 함수
 def generate_choices_and_answer(row):
     prompt = (

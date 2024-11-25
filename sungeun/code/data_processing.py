@@ -63,9 +63,12 @@ def load_prompt_template(filepath):
         return file.read()
 
 # 프롬프트 템플릿 로드
-PROMPT_NO_QUESTION_PLUS = load_prompt_template(config["prompts"]["PROMPT_NO_QUESTION_PLUS_PATH"])
-PROMPT_QUESTION_PLUS = load_prompt_template(config["prompts"]["PROMPT_QUESTION_PLUS_PATH"])
+TRAIN_NO_QUESTION_PLUS = load_prompt_template(config["prompts"]["TRAIN_NO_QUESTION_PLUS_PATH"])
+TRAIN_QUESTION_PLUS = load_prompt_template(config["prompts"]["TRAIN_QUESTION_PLUS_PATH"])
+TEST_NO_QUESTION_PLUS = load_prompt_template(config["prompts"]["TEST_NO_QUESTION_PLUS_PATH"])
+TEST_QUESTION_PLUS = load_prompt_template(config["prompts"]["TEST_QUESTION_PLUS_PATH"])
 
+# train
 def process_dataset_with_prompts(df):
     dataset = Dataset.from_pandas(df)
     processed_dataset = []
@@ -74,14 +77,14 @@ def process_dataset_with_prompts(df):
         
         # question_plus 여부에 따라 프롬프트 템플릿 선택
         if dataset[i]["question_plus"]:
-            user_message = PROMPT_QUESTION_PLUS.format(
+            user_message = TRAIN_QUESTION_PLUS.format(
                 paragraph=dataset[i]["paragraph"],
                 question=dataset[i]["question"],
                 question_plus=dataset[i]["question_plus"],
                 choices=choices_string,
             )
         else:
-            user_message = PROMPT_NO_QUESTION_PLUS.format(
+            user_message = TRAIN_NO_QUESTION_PLUS.format(
                 paragraph=dataset[i]["paragraph"],
                 question=dataset[i]["question"],
                 choices=choices_string,
@@ -152,7 +155,7 @@ def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, 
     
     return train_dataset, eval_dataset
 
-
+# test
 def format_test_data_for_model(test_df):
     # 테스트 데이터셋 가공
     test_dataset = []
@@ -162,7 +165,7 @@ def format_test_data_for_model(test_df):
 
         # <보기>가 있을 때
         if row["question_plus"]:
-            user_message = PROMPT_QUESTION_PLUS.format(
+            user_message = TEST_QUESTION_PLUS.format(
                 paragraph=row["paragraph"],
                 question=row["question"],
                 question_plus=row["question_plus"],
@@ -170,7 +173,7 @@ def format_test_data_for_model(test_df):
             )
         # <보기>가 없을 때
         else:
-            user_message = PROMPT_NO_QUESTION_PLUS.format(
+            user_message = TEST_NO_QUESTION_PLUS.format(
                 paragraph=row["paragraph"],
                 question=row["question"],
                 choices=choices_string,

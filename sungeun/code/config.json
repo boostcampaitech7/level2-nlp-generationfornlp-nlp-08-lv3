@@ -5,6 +5,7 @@
     "output_dir": "../output_new_train3_V6(286_2048)",
     "model_name": "Qwen/Qwen2.5-7B-Instruct",
     "checkpoint_path": "../output_new_train3_V6(286_2048)/checkpoint-7536",
+
     "max_features": 1000,
     "use_lora": true,
     "lora_r": 6,
@@ -35,8 +36,10 @@
     },
 
     "prompts": {
-        "PROMPT_NO_QUESTION_PLUS_PATH": "../new_prompts/prompt_no_question_plus.txt",
-        "PROMPT_QUESTION_PLUS_PATH": "../new_prompts/prompt_question_plus.txt"
+        "TRAIN_NO_QUESTION_PLUS_PATH": "../prompts/train_no_question_plus.txt", 
+        "TRAIN_QUESTION_PLUS_PATH": "../prompts/train_question_plus.txt", 
+        "TEST_NO_QUESTION_PLUS_PATH": "../prompts/test_no_question_plus.txt", 
+        "TEST_QUESTION_PLUS_PATH": "../prompts/test_question_plus.txt"
     },
 
     "accelerate_config": {

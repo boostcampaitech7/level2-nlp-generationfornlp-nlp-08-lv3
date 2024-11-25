@@ -1,0 +1,15 @@
+Epoch : 1,
+Training Loss : 0.145400,
+Validation Loss : 0.077428,
+Accuracy : 0.380623
+#########################
+Epoch : 2,
+Training Loss : 0.078700,
+Validation Loss : 0.077801,
+Accuracy : 0.380623
+#########################
+Epoch : 3,
+Training Loss : 0.074400,
+Validation Loss : 0.078222,
+Accuracy : 0.380623
+#########################
