@@ -1,43 +1,42 @@
 {
     "random_seed": 42,
-    "train_data_path": "/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/data/shuffle_data.csv",
-    "test_data_path": "/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/data/test_cleaned3.csv",
-    "output_dir": "../new_prompt",
-    "model_name": "Qwen/Qwen2.5-7B-Instruct",
-    "checkpoint_path": "../../new_prompt/checkpoint-3600",
-    "max_features": 2000,
+    "train_data_path": "../data/train.csv",
+    "test_data_path": "../data/test.csv",
+    "output_dir": "../output_4096",
+    "model_name": "Qwen/Qwen2.5-3B-Instruct",
+    "checkpoint_path": "../output_4096/checkpoint-10125",
+    "max_features": 1000,
     "use_lora": true,
     "lora_r": 6,
-    "lora_alpha": 16,
-    "lora_dropout": 0.01,
+    "lora_alpha": 8,
+    "lora_dropout": 0.05,
     "lora_target_modules": ["q_proj", "k_proj"],
     "lora_bias": "none",
     "lora_task_type": "CAUSAL_LM",
+    "max_length": 8000,
 
     "sft_config": {
         "do_train": true,
         "do_eval": true,
-        "lr_scheduler_type": "linear",
-        "max_seq_length": 2048,
-        "output_dir": "../new_prompt",
-        "per_device_train_batch_size": 2,
+        "lr_scheduler_type": "cosine",
+        "max_seq_length": 1024,
+        "output_dir": "../output_4096",
+        "per_device_train_batch_size": 1,
         "per_device_eval_batch_size": 1,
-        "num_train_epochs": 5,
-        "learning_rate": 3e-5,
+        "num_train_epochs": 3,
+        "learning_rate": 2e-5,
         "weight_decay": 0.01,
-        "logging_steps": 10,
+        "logging_steps": 1,
         "logging_strategy": "epoch",
         "save_strategy": "epoch",
         "eval_strategy": "epoch",
         "save_total_limit": 2,
         "save_only_model": true,
-        "report_to": "none",
-        "fp16": true,
-        "gradient_checkpointing": true
+        "report_to": "none"
     },
 
     "prompts": {
-        "PROMPT_NO_QUESTION_PLUS_PATH": "../prompts/prompt_no_question_plus.txt",
-        "PROMPT_QUESTION_PLUS_PATH": "../prompts/prompt_question_plus.txt"
+        "PROMPT_NO_QUESTION_PLUS_PATH": "../new_prompts/prompt_no_question_plus.txt",
+        "PROMPT_QUESTION_PLUS_PATH": "../new_prompts/prompt_question_plus.txt"
     }
 }

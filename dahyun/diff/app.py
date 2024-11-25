@@ -5,8 +5,8 @@ import pandas as pd
 @st.cache_data
 def load_data():
     test_df = pd.read_csv('../data/test.csv')
-    output1_df = pd.read_csv('/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/diff/output_shuffle.csv') # Sota
-    output2_df = pd.read_csv('/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/diff/output_shuffle2.csv') # 현재 결과
+    output1_df = pd.read_csv('/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/diff/sota_output.csv') # Sota
+    output2_df = pd.read_csv('/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/diff/output_ppchange.csv') # 현재 결과
     return test_df, output1_df, output2_df
 
 test_df, output1_df, output2_df = load_data()

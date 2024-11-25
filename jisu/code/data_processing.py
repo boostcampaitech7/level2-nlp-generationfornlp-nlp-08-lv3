@@ -3,6 +3,7 @@ import pandas as pd
 from ast import literal_eval
 from sklearn.feature_extraction.text import TfidfVectorizer
 from datasets import Dataset
+from transformers import BitsAndBytesConfig
 
 def load_and_process_data(data_path):
     # 데이터셋 로드
@@ -91,6 +92,7 @@ def process_dataset_with_prompts(df):
                 "id": dataset[i]["id"],
                 "messages": [
                     {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
+                    # 지문을 읽고 질문의 답을 구하세요.
                     {"role": "user", "content": user_message},
                     {"role": "assistant", "content": f"{dataset[i]['answer']}"}
                 ],
@@ -140,7 +142,7 @@ def process_and_tokenize_dataset(processed_dataset, tokenizer):
 
 
 def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, seed=42):
-    # 1024 토큰 이하의 데이터만 필터링
+    # max_length 토큰 이하의 데이터만 필터링
     tokenized_dataset = tokenized_dataset.filter(lambda x: len(x["input_ids"]) <= max_length)
 
     # 훈련 및 검증 데이터셋 분리

@@ -1,0 +1,5 @@
+Epoch : 4,
+Training Loss : 0.164700,
+Validation Loss : 0.201355,
+Accuracy : 0.140000
+#########################

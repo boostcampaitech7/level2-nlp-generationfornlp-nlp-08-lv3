@@ -6,15 +6,15 @@ import os
 from utils import get_peft_config
 from data_processing import (
     load_and_process_data,
-    #concat_question_and_question_plus,
+    concat_question_and_question_plus,
+    compute_tfidf_features,
     process_dataset_with_prompts,
     process_and_tokenize_dataset,
-    filter_and_split_dataset, 
+    filter_and_split_dataset
 )
 from trl import DataCollatorForCompletionOnlyLM, SFTConfig, SFTTrainer
-from transformers import TrainerCallback, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import TrainerCallback, AutoModelForCausalLM, AutoTokenizer
 import evaluate  # 메트릭 평가 라이브러리
-import bitsandbytes as bnb
 
 # Config 파일 로드
 with open("config.json", "r") as f:
@@ -33,43 +33,32 @@ def set_seed(random_seed):
 set_seed(42) # magic number :)
 
 # 데이터 로드 및 전처리
-train_data = load_and_process_data(config["train_data_path"]) # DataFrame으로 변환
-#train_data = concat_question_and_question_plus(train_data) 
+train_data = load_and_process_data(config["train_data_path"])
+train_data = concat_question_and_question_plus(train_data)
+
+# TF-IDF 특성 생성
+tfidf_features = compute_tfidf_features(train_data, max_features=config["max_features"])
 
 # 프롬프트 적용 데이터셋 생성
 processed_train_data = process_dataset_with_prompts(train_data)
 
-
-# 4bit 양자화 설정
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_compute_dtype=torch.bfloat16,
-)
-
-model = AutoModelForCausalLM.from_pretrained(
-    config["model_name"], 
-    torch_dtype=torch.float16,
-    trust_remote_code=True,
-    device_map="auto",  # 양자화 지원 장치에 자동 매핑
-    quantization_config=bnb_config
-)
+model = AutoModelForCausalLM.from_pretrained(config["model_name"], torch_dtype=torch.float16, trust_remote_code=True,)
 tokenizer = AutoTokenizer.from_pretrained(config["model_name"], trust_remote_code=True,)
 
 
 # 채팅 템플릿 설정
-#tokenizer.chat_template = "{% if messages[0]['role'] == 'system' %}{% set system_message = messages[0]['content'] %}{% endif %}{% if system_message is defined %}{{ system_message }}{% endif %}{% for message in messages %}{% set content = message['content'] %}{% if message['role'] == 'user' %}{{ '<start_of_turn>user\\n' + content + '<end_of_turn>\\n<start_of_turn>model\\n' }}{% elif message['role'] == 'assistant' %}{{ content + '<end_of_turn>\\n' }}{% endif %}{% endfor %}"
-tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+tokenizer.chat_template = "{% if messages[0]['role'] == 'system' %}{% set system_message = messages[0]['content'] %}{% endif %}{% if system_message is defined %}{{ system_message }}{% endif %}{% for message in messages %}{% set content = message['content'] %}{% if message['role'] == 'user' %}{{ '<start_of_turn>user\\n' + content + '<end_of_turn>\\n<start_of_turn>model\\n' }}{% elif message['role'] == 'assistant' %}{{ content + '<end_of_turn>\\n' }}{% endif %}{% endfor %}"
 
 # 데이터셋 토큰화
 tokenized_train_data = process_and_tokenize_dataset(processed_train_data, tokenizer)
 
+max_length = config['max_length']
+
 # 데이터 분리 및 필터링
-train_dataset, eval_dataset = filter_and_split_dataset(tokenized_train_data, max_length=2048, test_size=0.1, seed=config["random_seed"])
+train_dataset, eval_dataset = filter_and_split_dataset(tokenized_train_data, max_length=max_length, test_size=0.1, seed=config["random_seed"])
 
 # Completion 부분만 학습하기 위한 Data Collator 설정
-response_template = "<|assistant|>"
+response_template = "<start_of_turn>model"
 data_collator = DataCollatorForCompletionOnlyLM(
     response_template=response_template,
     tokenizer=tokenizer,
@@ -176,5 +165,4 @@ if checkpoint_path and os.path.exists(checkpoint_path):
     print(f"Resuming training from checkpoint: {checkpoint_path}")
     trainer.train(resume_from_checkpoint=checkpoint_path)
 else:
-    torch.cuda.empty_cache()
     trainer.train()  # 처음부터 학습 시작

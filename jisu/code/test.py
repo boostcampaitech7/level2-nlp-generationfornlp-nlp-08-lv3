@@ -4,11 +4,10 @@ import numpy as np
 import pandas as pd
 import torch
 from tqdm import tqdm
-from data_processing import load_and_process_data, format_test_data_for_model  # 데이터 로드 및 전처리 함수
+from data_processing import load_and_process_data, format_test_data_for_model# 데이터 로드 및 전처리 함수
 from transformers import AutoTokenizer, BitsAndBytesConfig
 from peft import AutoPeftModelForCausalLM
 import random
-
 
 # 시드 고정 함수
 def set_seed(seed):
@@ -29,7 +28,6 @@ with open("config.json", "r", encoding="utf-8") as f:
 
 checkpoint_path = config["checkpoint_path"]
 
-
 # 4bit 양자화 설정
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -37,26 +35,19 @@ bnb_config = BitsAndBytesConfig(
     bnb_4bit_use_double_quant=True,
     bnb_4bit_compute_dtype=torch.bfloat16,
 )
+
 model = AutoPeftModelForCausalLM.from_pretrained(
     checkpoint_path,
     trust_remote_code=True,
-    device_map="auto",  # 양자화 지원 장치에 자동 매핑
-    quantization_config=bnb_config,
     torch_dtype=torch.float16,
-    low_cpu_mem_usage=True
+    # torch_dtype=torch.bfloat16,
+    device_map="auto",
+    quantization_config=bnb_config
 )
-# model = AutoPeftModelForCausalLM.from_pretrained(
-#     checkpoint_path,
-#     trust_remote_code=True,
-#     # torch_dtype=torch.bfloat16,
-#     device_map="auto",
-#     load_in_4bit=True
-# )
 
 tokenizer = AutoTokenizer.from_pretrained(
     checkpoint_path,
     trust_remote_code=True,
-    low_cpu_mem_usage=True
 )
 
 # 테스트 데이터 로드 및 전처리

@@ -1,7 +1,6 @@
 from peft import LoraConfig
 import json
 
-
 def get_peft_config():
     # Config 파일 로드
     with open("config.json", "r") as f:
