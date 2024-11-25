@@ -42,7 +42,7 @@ def load_and_process_test_data(data_path):
     records = []
     for _, row in dataset.iterrows():
         #problems = literal_eval(row['problems'])
-        row['choices'].append('정답 없음') # 추가
+        #problems['choices'].append('정답 없음') # 추가
         record = {
             'id': row['id'],
             'paragraph': row['paragraph'],
