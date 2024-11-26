@@ -20,9 +20,9 @@ def clean_text(text):
     return text
 
 # Prompt (간결화된 한국어)
-def generate_question(paragraph, original_question, original_choices, original_answer):
+def generate_question(paragraph, original_question, original_choices, original_answer, original_hint):
     prompt = [
-        {"role": "system", "content": "당신은 단락과 그에 대한 예시 문제들을 참고하여 사전지식 없이 주어진 단락 내용을 읽고 추론하여 풀 수 있는 오지선다형 문제를 새롭게 생성하는 AI입니다."},
+        {"role": "system", "content": "당신은 단락과 그에 대한 예시 문제들을 참고하여 주어진 단락 내용과 관련된 오지선다형 문제와 힌트를 새롭게 생성하는 AI입니다."},
         {"role": "user", "content": f"""
         주어진 단락을 바탕으로 새로운 질문을 만들어주세요. 
 
@@ -32,12 +32,13 @@ def generate_question(paragraph, original_question, original_choices, original_a
         원래 질문: {original_question}
         원래 선택지: {original_choices}
         원래 정답: {original_answer}
+        원래 힌트: {original_hint}
 
         요청 사항:
         - 한국어로 생성하며 원래 질문, 원래 선택지, 원래 정답을 참고하여 원래 내용과 다른 질문, 선택지, 정답을 생성하세요.
         - 단락의 주요 내용을 확인합니다.
         - 단락의 주요 내용을 바탕으로 원래 질문의 내용과 다른 질문을 생성합니다.
-        - 5개의 선택지를 포함하되, 정답은 1개만 포함하고 대부분 선택지 5에 위치하게 생성합니다. 
+        - 문제를 풀기 위해 문제와 관련있고, 단락의 내용을 보충해주는 힌트를 생성합니다.
         - 한국어로 작성하며, 다음 형식으로 작성합니다:
 
         질문: [새 질문]
@@ -48,23 +49,26 @@ def generate_question(paragraph, original_question, original_choices, original_a
         4. [선택지 4]
         5. [선택지 5]
         정답: [정답 번호]
+        힌트: [힌트 내용]
 
         - 이 때 정답 번호는 생성한 질문 중 정답인 선택지 번호 입니다. 
         """}
     ]
 
+    #print(f"prompt: {prompt}")
+
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=prompt,
-            max_tokens=400
+            max_tokens=500
         )
         return response.choices[0].message['content']
     except Exception as e:
         logging.error(f"질문 생성 중 오류 발생: {str(e)}")
         return None
 
-df = pd.read_csv('/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/dahyun/data/classified_train_processed_filtered.csv')
+df = pd.read_csv('/data/ephemeral/home/level2-nlp-generationfornlp-nlp-08-lv3/taewon/RAG/hint/mmmlu_wr_his_add_hint.csv')
 
 # 결과를 저장할 새로운 DataFrame
 results = []
@@ -79,16 +83,18 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="새로운 질문 
     original_question = problems['question']
     original_choices = problems['choices']
     original_answer = problems['answer']
+    original_hint = row['hint']
     
     success = False
-    for attempt in range(2): 
-        generated_content = generate_question(paragraph, original_question, original_choices, original_answer)
+    for attempt in range(1): 
+        generated_content = generate_question(paragraph, original_question, original_choices, original_answer, original_hint)
         #print(f"generate: {generated_content}")
 
 
         if generated_content:
             # 응답을 수동으로 파싱하여 필요한 정보를 추출합니다.
             lines = generated_content.split('\n')
+            #print(f"lines: {lines}")
             new_question = ""
             new_choices = []
             new_answer = None
@@ -124,6 +130,10 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="새로운 질문 
                     except ValueError:
                         logging.error(f"Invalid answer format: {line}")
             
+                elif line.startswith("힌트"):
+                    new_hint = line.replace("힌트 : ", "").strip()
+            
+            
             if (new_question) and (len(new_choices) == 5) and (new_answer is not None):
                 #print("save new row")
                 new_row = {
@@ -134,7 +144,8 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="새로운 질문 
                         'choices': new_choices,
                         'answer': new_answer
                     },
-                    'question_plus': ''
+                    'question_plus': '',
+                    'hint': new_hint
                 }
                 results.append(new_row)
                 #print(f'new_row: {new_row}')
@@ -154,10 +165,10 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="새로운 질문 
 # 결과를 새로운 DataFrame으로 변환
 result_df = pd.DataFrame(results)
 # 결과를 CSV 파일로 저장
-result_df.to_csv('../data/new_augmented_questions.csv', index=False)
+result_df.to_csv('../aug_hint/aug_mmmlu_wr_his_add_hint.csv', index=False)
 
 # 실패한 행들을 CSV 파일로 저장
 failed_df = pd.DataFrame(failed_rows)
 failed_df.to_csv('failed_rows.csv', index=False)
 
-print(f"데이터 증강이 완료되었습니다. 결과가 'new_augmented_questions.csv' 파일에 저장되었습니다.")
+print(f"데이터 증강이 완료되었습니다. 결과가 'mmmlu_wr_his_add_hint.csv' 파일에 저장되었습니다.")

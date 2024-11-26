@@ -1,9 +1,0 @@
-ipykernel
-ipywidgets
-torch
-transformers
-trl
-scikit-learn
-matplotlib
-evaluate
-peft
