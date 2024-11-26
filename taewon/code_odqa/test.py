@@ -62,7 +62,7 @@ pred_choices_map = {
     2: "3",
     3: "4",
     4: "5",
-    5: lambda: random.choice(["1", "2", "3", "4", "5"])
+    #5: lambda: random.choice(["1", "2", "3", "4", "5"])
 }
 
 model.eval()
@@ -93,17 +93,17 @@ with torch.inference_mode():
             .numpy()
         )
 
-        # predict_value = pred_choices_map[np.argmax(probs, axis=-1)]
-        # infer_results.append({"id": _id, "answer": predict_value})
+        predict_value = pred_choices_map[np.argmax(probs, axis=-1)]
+        infer_results.append({"id": _id, "answer": predict_value})
         
-        predict_idx = np.argmax(probs, axis=-1)
+'''        predict_idx = np.argmax(probs, axis=-1)
         predict_value = pred_choices_map[predict_idx]
         
         # lambda 함수일 경우 호출하여 랜덤 선택
         if callable(predict_value):
             predict_value = predict_value()
         
-        infer_results.append({"id": _id, "answer": predict_value})
+        infer_results.append({"id": _id, "answer": predict_value})'''
 
 # CSV 파일로 결과 저장
 output_file_path = os.path.join(config["output_dir"], "output_odqa.csv")

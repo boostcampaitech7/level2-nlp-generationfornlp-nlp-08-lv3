@@ -124,7 +124,7 @@ def process_dataset_with_prompts(df):
             {
                 "id": dataset[i]["id"],
                 "messages": [
-                    {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
+                    {"role": "system", "content": "사회 시험 문제를 푸는 똑똑한 학생으로서 다음 문제의 답을 구하세요."},
                     # 지문을 읽고 질문의 답을 구하세요.
                     {"role": "user", "content": user_message},
                     {"role": "assistant", "content": f"{dataset[i]['answer']}"}
@@ -227,7 +227,7 @@ def format_test_data_for_model(test_df):
             {
                 "id": row["id"],
                 "messages": [
-                    {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
+                    {"role": "system", "content": "사회 시험 문제를 푸는 똑똑한 학생으로서 다음 문제의 답을 구하세요."},
                     {"role": "user", "content": user_message},
                 ],
                 "label": row["answer"],
