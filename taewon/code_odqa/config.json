@@ -1,10 +1,10 @@
 {
     "random_seed": 42,
-    "train_data_path": "../data/train.csv",
-    "test_data_path": "../data/test.csv",
+    "train_data_path": "../data/train_odqa.csv",
+    "test_data_path": "../data/test_odqa.csv",
     "output_dir": "../output",
     "model_name": "Qwen/Qwen2.5-7B-Instruct",
-    "checkpoint_path": "../output/checkpoint",
+    "checkpoint_path": "../output_odqa_model/checkpoint-3072",
     "max_features": 1000,
     "use_lora": true,
     "lora_r": 6,
