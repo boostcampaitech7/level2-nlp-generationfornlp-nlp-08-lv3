@@ -2,17 +2,17 @@
 
 ## 📝 Abstract (수정 필요)
 - [📈 Project Wrap-Up Report](https://github.com/user-attachments/files/17674538/DataCentric_13.Wrap-Up.pdf)
-- 이 프로젝트는 네이버 부스트캠프 AI Tech 7기 NLP Level 2 기초 프로젝트 경진대회로, Dacon, Kaggle과 유사한 대회형 방식으로 진행되었다.
+- 이 프로젝트는 부스트캠프 AI Tech 7기 NLP track 프로젝트 경진 대회로, Dacon, Kaggle과 유사한 대회형 방식으로 진행되었다.
 - 소형 언어 모델을 사용해 한국어와 수능 시험에 최적화된 AI 모델을 개발하여 GPT, Claude, Gemini와 같은 대형 모델을 능가하는 성능을 목표로 하였다.
 
 <br>
 
-## 🏆 Leader Board (수정 필요)
-### public
-<img width="700" alt="public_leader_board" src="https://github.com/user-attachments/assets/423cee6f-c285-4b18-888a-574d05ab2c15">
+## 🏆 Leader Board
+### Public
+<img width="700" alt="public_leader_board" src="https://github.com/user-attachments/assets/e2f86836-f39f-461a-beab-c2aa01076874">
 
 ### Private
-<img width="700" alt="private_leader_board" src="https://github.com/user-attachments/assets/03c1ab2d-250d-433c-bd9d-4f94f721fe74">
+<img width="700" alt="private_leader_board" src="https://github.com/user-attachments/assets/4f4edb2b-7e48-468e-90a0-e484f464741a">
 
 <br>
 
@@ -20,10 +20,10 @@
 
 > **Team NLP크민**
 
-### 👨🏼‍💻 Members (수정 필요)
+### 👨🏼‍💻 Members
 권지수 | 김성은 | 김태원 | 이다현 | 이한서 | 정주현
 :-: | :-: | :-: | :-: | :-: | :-:
-<img src='https://github.com/user-attachments/assets/ab4b7189-ec53-41be-8569-f40619b596ce' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/49dc0e59-93ee-4e08-9126-4a3deca9d530' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/a15b0f0b-cd89-412b-9b3d-f59eb9787613' height=125 width=100></img> | <img src='이다현' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/11b2ed88-bf94-4741-9df5-5eb2b9641a9b' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/3e2d2a7e-1c64-4cb7-97f6-a2865de0c594' height=125 width=100></img>
+<img src='https://github.com/user-attachments/assets/ab4b7189-ec53-41be-8569-f40619b596ce' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/49dc0e59-93ee-4e08-9126-4a3deca9d530' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/a15b0f0b-cd89-412b-9b3d-f59eb9787613' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/4064f03a-a1dc-4dd1-ac84-d9ac8636418a' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/11b2ed88-bf94-4741-9df5-5eb2b9641a9b' height=125 width=100></img> | <img src='https://github.com/user-attachments/assets/3e2d2a7e-1c64-4cb7-97f6-a2865de0c594' height=125 width=100></img>
 <a href="mailto:wltn80609@ajou.ac.kr" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:sunny020111@ajou.ac.kr" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:chris40461@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:dhdh09290929@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:beaver.zip@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:peter520416@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a>|
 <a href="https://github.com/Kwon-Jisu" target="_blank"><img src="https://img.shields.io/badge/GitHub-Kwon--Jisu-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/ssungni" target="_blank"><img src="https://img.shields.io/badge/GitHub-ssungni-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/chris40461" target="_blank"><img src="https://img.shields.io/badge/GitHub-chris40461-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/dhl0929" target="_blank"><img src="https://img.shields.io/badge/GitHub-dhl0929-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/beaver-zip" target="_blank"><img src="https://img.shields.io/badge/GitHub-beaver--zip-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/peter520416" target="_blank"><img src="https://img.shields.io/badge/GitHub-peter520416-181717?style&logo=GitHub&logoColor=white" /></a>
 
