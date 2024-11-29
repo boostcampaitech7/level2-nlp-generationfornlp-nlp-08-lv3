@@ -7,8 +7,7 @@ from datasets import Dataset
 def load_and_process_data(data_path):
     # 데이터셋 로드
     dataset = pd.read_csv(data_path)
-    # dataset = dataset[:30] # 빠르게 실행해볼때
-    
+        
     # JSON 형식의 데이터를 펼쳐서 새로운 DataFrame 생성
     records = []
     for _, row in dataset.iterrows():
