@@ -1,13 +1,16 @@
 import json
 import os
+import random
+
 import numpy as np
 import pandas as pd
 import torch
 from tqdm import tqdm
-from data_processing import load_and_process_data, format_test_data_for_model
-from transformers import AutoTokenizer, BitsAndBytesConfig, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import AutoPeftModelForCausalLM
-import random
+
+from data_processing import load_and_process_data, format_test_data_for_model
+
 
 # 시드 고정 함수
 def set_seed(seed):
@@ -18,6 +21,7 @@ def set_seed(seed):
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
 
 # 시드 고정
 set_seed(42)
@@ -41,7 +45,7 @@ model = AutoPeftModelForCausalLM.from_pretrained(
     trust_remote_code=True,
     torch_dtype=torch.float16,
     device_map="auto",
-    quantization_config=bnb_config
+    quantization_config=bnb_config,
 )
 
 tokenizer = AutoTokenizer.from_pretrained(
@@ -61,7 +65,7 @@ pred_choices_map = {
     2: "3",
     3: "4",
     4: "5",
-    5: lambda: random.choice(["1", "2", "3", "4", "5"])
+    5: lambda: random.choice(["1", "2", "3", "4", "5"]),
 }
 
 model.eval()
@@ -91,14 +95,14 @@ with torch.inference_mode():
             .cpu()
             .numpy()
         )
-        
+
         predict_idx = np.argmax(probs, axis=-1)
         predict_value = pred_choices_map[predict_idx]
-        
+
         # lambda 함수일 경우 호출하여 랜덤 선택
         if callable(predict_value):
             predict_value = predict_value()
-        
+
         infer_results.append({"id": _id, "answer": predict_value})
 
 # CSV 파일로 결과 저장
