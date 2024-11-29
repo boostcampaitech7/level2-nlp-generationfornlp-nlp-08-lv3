@@ -33,6 +33,25 @@
 #     print(filtered_id)
 # print(count)
 
-import torch
-major_version, minor_version = torch.cuda.get_device_capability()
-print(major_version, minor_version)
+import pandas as pd
+
+# 두 CSV 파일 읽기 (한글 인코딩 처리)
+df1 = pd.read_csv('../data/js_new_train3_cleaned286.csv', encoding='utf-8-sig')
+df2 = pd.read_csv('../data/new_quiz_format.csv', encoding='utf-8-sig')
+
+# 데이터프레임 수직 연결
+combined_df = pd.concat([df1, df2], ignore_index=True)
+
+# 연결된 데이터프레임 저장 (한글 인코딩 처리)
+combined_df.to_csv('../data/combined_file.csv', index=False, encoding='utf-8-sig')
+
+# import pandas as pd
+
+# # CSV 파일 읽기 (한글 인코딩 처리)
+# df = pd.read_csv('../data/new_train3_cleaned286.csv', encoding='utf-8-sig')
+
+# # 첫 번째 열 제거
+# df = df.iloc[:, 1:]  # 모든 행과 첫 번째 열 제외
+
+# # 변경된 데이터프레임 저장
+# df.to_csv('../data/js_new_train3_cleaned286.csv', index=False, encoding='utf-8-sig')
