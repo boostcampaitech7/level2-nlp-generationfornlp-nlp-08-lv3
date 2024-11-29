@@ -2,8 +2,8 @@
 
 ## 📝 Abstract (수정 필요)
 - [📈 Project Wrap-Up Report](https://github.com/user-attachments/files/17674538/DataCentric_13.Wrap-Up.pdf)
-- 이 프로젝트는 부스트캠프 AI Tech 7기 NLP track 프로젝트 경진 대회로, Dacon, Kaggle과 유사한 대회형 방식으로 진행되었다.
-- 소형 언어 모델을 사용해 한국어와 수능 시험에 최적화된 AI 모델을 개발하여 GPT, Claude, Gemini와 같은 대형 모델을 능가하는 성능을 목표로 하였다.
+- 이 프로젝트는 부스트캠프 AI Tech 7기 NLP track 경진 대회로, Dacon, Kaggle과 유사한 대회형 방식으로 진행되었다.
+- 소형 언어 모델을 사용해 한국어 및 수능 시험에 최적화된 AI 모델을 개발하여 GPT, Claude, Gemini와 같은 대형 모델을 능가하는 성능을 목표로 하였다.
 
 <br>
 
@@ -78,10 +78,10 @@
 
 ## 📐 Project Ground Rule
 > 효율적인 협업을 위해 매일 아침 ZOOM 화상 회의를 통해 각자의 진행 상황과 당일 실험 계획을 공유하였으며, 오후 4시부터 7시까지 다시 ZOOM 회의를 통해 실험 결과를 실시간으로 공유하고 피드백을 주고받았다.
-- **`Server:`** 모든 서버를 Git으로 연동해 버전 관리, 유휴 상태의 서버에서 실험 진행
-- **`Git:`** 개인별 branch에 작업한 코드 및 데이터 공유
-- **`Notion:`** 가설, 구현 및 실험 결과를 기록해 진행 상황 공유
-- **`Submission:`** 리더보드 마감 5일 전까지 자유롭게 제출, 이후 인당 2회씩 부여
+- **`Server`:** 모든 서버를 Git으로 연동해 버전 관리, 유휴 상태의 서버에서 실험 진행
+- **`Git`:** 개인별 branch에 작업한 코드 및 데이터 공유
+- **`Notion`:** 가설, 구현 및 실험 결과를 기록해 진행 상황 공유
+- **`Submission`:** 리더보드 마감 5일 전까지 자유롭게 제출, 이후 인당 1일 2회 제출
 
 <br>
 
