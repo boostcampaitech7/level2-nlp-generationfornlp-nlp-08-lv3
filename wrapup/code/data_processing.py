@@ -7,7 +7,8 @@ from datasets import Dataset
 def load_and_process_data(data_path):
     # 데이터셋 로드
     dataset = pd.read_csv(data_path)
-        
+    # dataset = dataset[:30] # 빠르게 실행해볼때
+
     # JSON 형식의 데이터를 펼쳐서 새로운 DataFrame 생성
     records = []
     for _, row in dataset.iterrows():
@@ -24,12 +25,11 @@ def load_and_process_data(data_path):
         if 'question_plus' in problems:
             record['question_plus'] = problems['question_plus']
         records.append(record)
-        
+
     # DataFrame으로 변환
     df = pd.DataFrame(records)
 
     return df
-
 
 def concat_question_and_question_plus(df):
     # 'question'과 'question_plus' 컬럼 결합
@@ -38,7 +38,7 @@ def concat_question_and_question_plus(df):
 
     # 각 질문의 길이를 계산
     df['question_length'] = df['full_question'].apply(len)
-    
+
     return df
 
 
@@ -46,7 +46,7 @@ def compute_tfidf_features(df, max_features=1000):
     # TF-IDF 벡터화 수행
     tfidf_vectorizer = TfidfVectorizer(max_features=max_features)
     tfidf_matrix = tfidf_vectorizer.fit_transform(df['full_question'])
-    
+
     # DataFrame 형태로 변환하여 반환
     tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vectorizer.get_feature_names_out())
     return tfidf_df
@@ -70,7 +70,7 @@ def process_dataset_with_prompts(df):
     processed_dataset = []
     for i in range(len(dataset)):
         choices_string = "\n".join([f"{idx + 1} - {choice}" for idx, choice in enumerate(dataset[i]["choices"])])
-        
+
         # question_plus 여부에 따라 프롬프트 템플릿 선택
         if dataset[i]["question_plus"]:
             user_message = PROMPT_QUESTION_PLUS.format(
@@ -85,12 +85,12 @@ def process_dataset_with_prompts(df):
                 question=dataset[i]["question"],
                 choices=choices_string,
             )
-        
+
         processed_dataset.append(
             {
                 "id": dataset[i]["id"],
                 "messages": [
-                    {"role": "system", "content": "질문의 답을 구하세요."},
+                    {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
                     # 지문을 읽고 질문의 답을 구하세요.
                     {"role": "user", "content": user_message},
                     {"role": "assistant", "content": f"{dataset[i]['answer']}"}
@@ -139,6 +139,7 @@ def process_and_tokenize_dataset(processed_dataset, tokenizer):
     )
     return tokenized_dataset
 
+
 def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, seed=42):
     # max_length 토큰 이하의 데이터만 필터링
     tokenized_dataset = tokenized_dataset.filter(lambda x: len(x["input_ids"]) <= max_length)
@@ -147,7 +148,7 @@ def filter_and_split_dataset(tokenized_dataset, max_length=1024, test_size=0.1, 
     tokenized_dataset = tokenized_dataset.train_test_split(test_size=test_size, seed=seed)
     train_dataset = tokenized_dataset['train']
     eval_dataset = tokenized_dataset['test']
-    
+
     return train_dataset, eval_dataset
 
 
@@ -178,11 +179,10 @@ def format_test_data_for_model(test_df):
             {
                 "id": row["id"],
                 "messages": [
-                    {"role": "system", "content": "질문의 답을 구하세요."},
+                    {"role": "system", "content": "지문을 읽고 질문의 답을 구하세요."},
                     {"role": "user", "content": user_message},
                 ],
                 "label": row["answer"],
                 "len_choices": len_choices,
             }
         )
-    return test_dataset

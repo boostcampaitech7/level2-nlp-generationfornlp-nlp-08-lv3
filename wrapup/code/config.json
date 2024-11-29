@@ -4,7 +4,7 @@
     "test_data_path": "../data/test.csv",
     "output_dir": "../output_qwen_7b",
     "model_name": "Qwen/Qwen2.5-7B-Instruct",
-    "checkpoint_path": "../output_qwen_7b/checkpoint-2456",
+    "checkpoint_path": "../output_qwen_7b/checkpoint-7536",
     "max_features": 1000,
     "use_lora": true,
     "lora_r": 6,
