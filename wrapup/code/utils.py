@@ -2,11 +2,11 @@ from peft import LoraConfig
 import json
 
 def get_peft_config():
-    # Config 파일 로드
+    # config 파일 로드
     with open("config.json", "r") as f:
         config = json.load(f)
     
-    # LoRA 설정이 활성화되어 있을 때만 반환
+    # LoRA 설정
     if config.get("use_lora", False):
         peft_config = LoraConfig(
             r=config["lora_r"],

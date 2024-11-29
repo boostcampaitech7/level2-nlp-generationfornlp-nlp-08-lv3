@@ -1,7 +1,6 @@
 import pandas as pd
 
 # CSV 파일 로드
-# CSV 파일 로드
 df1 = pd.read_csv('../data/aug_train.csv')
 df2 = pd.read_csv('../data/new_augmented_questions.csv')
 
