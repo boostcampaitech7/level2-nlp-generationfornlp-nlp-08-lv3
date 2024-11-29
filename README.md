@@ -61,6 +61,7 @@
   ┣ 📜utils.py
   ┣ 📜train.py
   ┗ 📜test.py
+
  📂data
   ┣ 📜aug_gemini.csv
   ┣ 📜aug_gpt.csv
@@ -69,6 +70,7 @@
   ┣ 📜classified_train_processed_filtered.csv
   ┣ 📜train_augmented.csv
   ┗ 📜train_final.csv
+
 📂prompts
   ┣ 📜prompt_no_question_plus.txt
   ┗ 📜prompt_question_plus.txt
