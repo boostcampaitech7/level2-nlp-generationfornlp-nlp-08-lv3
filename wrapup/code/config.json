@@ -1,6 +1,6 @@
 {
     "random_seed": 42,
-    "train_data_path": "../data/new_train3_cleaned286.csv",
+    "train_data_path": "../data/train_final.csv",
     "test_data_path": "../data/test.csv",
     "output_dir": "../output_qwen_7b",
     "model_name": "Qwen/Qwen2.5-7B-Instruct",
