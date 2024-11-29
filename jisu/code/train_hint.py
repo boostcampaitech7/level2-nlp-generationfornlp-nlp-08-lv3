@@ -5,13 +5,15 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from tqdm import tqdm
 import logging
 
+from unsloth import FastLanguageModel
+
 # ===========================
 # 1. 설정 변수
 # ===========================
 
 INPUT_FILE = '../data/need_knowledge.csv'
 OUTPUT_FILE = 'train_hint.csv'
-MODEL_NAME = 'beomi/Qwen2.5-7B-Instruct-kowiki-qa-context'
+MODEL_NAME = 'unsloth/Qwen2-VL-7B-Instruct-bnb-4bit'
 SPECIAL_TOKENS_FILE = 'special_tokens_map.json'
 BATCH_SIZE = 1
 MAX_NEW_TOKENS = 256
@@ -39,15 +41,34 @@ def load_special_tokens(file_path):
             tokens[token] = tokens[token].get('content', '')
     return tokens
 
+# 모델 및 양자화 설정
+max_seq_length = 2048
+dtype = None
+load_in_4bit = False
+
 # Load special tokens
 logger.info("Loading tokenizer and model...")
 special_tokens = load_special_tokens(SPECIAL_TOKENS_FILE)
 
+# Initialize tokenizer
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=True, padding_side='left')
 tokenizer.add_special_tokens(special_tokens)
 
-model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
-model.resize_token_embeddings(len(tokenizer))
+try:
+    # Use FastLanguageModel if available
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name=MODEL_NAME,
+        max_seq_length=max_seq_length,
+        dtype=dtype,
+        load_in_4bit=load_in_4bit,
+        cache_dir='/data'
+    )
+    logger.info("Loaded FastLanguageModel with quantization.")
+except ImportError:
+    # Fallback to default AutoModelForCausalLM
+    logger.warning("FastLanguageModel not available, falling back to AutoModelForCausalLM.")
+    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
+    model.resize_token_embeddings(len(tokenizer))
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model.to(device)

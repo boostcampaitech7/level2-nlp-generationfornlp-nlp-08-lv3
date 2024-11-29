@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import torch
 from tqdm import tqdm
-from data_processing import load_and_process_data, format_test_data_for_model# 데이터 로드 및 전처리 함수
+from data_processing import load_and_process_data, format_test_data_for_model  # 데이터 로드 및 전처리 함수
 from transformers import AutoTokenizer, BitsAndBytesConfig
 from peft import AutoPeftModelForCausalLM
 import random
@@ -93,18 +93,19 @@ with torch.inference_mode():
             .numpy()
         )
 
-        # predict_value = pred_choices_map[np.argmax(probs, axis=-1)]
-        # infer_results.append({"id": _id, "answer": predict_value})
-        
         predict_idx = np.argmax(probs, axis=-1)
         predict_value = pred_choices_map[predict_idx]
-        
+
         # lambda 함수일 경우 호출하여 랜덤 선택
         if callable(predict_value):
             predict_value = predict_value()
-        
+
         infer_results.append({"id": _id, "answer": predict_value})
 
-# CSV 파일로 결과 저장
-output_file_path = os.path.join(config["output_dir"], "output.csv")
+# CSV 파일로 결과 저장 전에 output_dir 존재 여부 확인 및 생성
+output_dir = config["output_dir"]
+os.makedirs(output_dir, exist_ok=True)  # 디렉토리가 없으면 생성
+
+output_file_path = os.path.join(output_dir, "output.csv")
 pd.DataFrame(infer_results).to_csv(output_file_path, index=False)
+
