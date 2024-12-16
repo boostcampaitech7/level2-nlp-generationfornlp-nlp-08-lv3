@@ -1,7 +1,7 @@
 # Level 2: 수능형 문제 풀이 모델 생성 (Generation for NLP)
 
-## 📝 Abstract (수정 필요)
-- [📈 Project Wrap-Up Report](https://github.com/user-attachments/files/17674538/DataCentric_13.Wrap-Up.pdf)
+## 📝 Abstract
+- [Wrap-Up Report](https://github.com/user-attachments/files/18146095/_NLP_.08.pdf)
 - 이 프로젝트는 부스트캠프 AI Tech 7기 NLP track 경진 대회로, Dacon, Kaggle과 유사한 대회형 방식으로 진행되었다.
 - 소형 언어 모델을 사용해 한국어 및 수능 시험에 최적화된 AI 모델을 개발하여 GPT, Claude, Gemini와 같은 대형 모델을 능가하는 성능을 목표로 하였다.
 
@@ -27,16 +27,16 @@
 <a href="mailto:wltn80609@ajou.ac.kr" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:sunny020111@ajou.ac.kr" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:chris40461@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:dhdh09290929@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:beaver.zip@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a> | <a href="mailto:peter520416@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-EA4335?style&logo=Gmail&logoColor=white"/></a>|
 <a href="https://github.com/Kwon-Jisu" target="_blank"><img src="https://img.shields.io/badge/GitHub-Kwon--Jisu-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/ssungni" target="_blank"><img src="https://img.shields.io/badge/GitHub-ssungni-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/chris40461" target="_blank"><img src="https://img.shields.io/badge/GitHub-chris40461-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/dhl0929" target="_blank"><img src="https://img.shields.io/badge/GitHub-dhl0929-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/beaver-zip" target="_blank"><img src="https://img.shields.io/badge/GitHub-beaver--zip-181717?style&logo=GitHub&logoColor=white" /></a> | <a href="https://github.com/peter520416" target="_blank"><img src="https://img.shields.io/badge/GitHub-peter520416-181717?style&logo=GitHub&logoColor=white" /></a>
 
-### 🧑🏻‍💻 Role (수정 필요)
+### 🧑🏻‍💻 Role
 
 | 이름 | 역할 |
 | :---: | --- |
-| **`권지수`** | **Text/Label Noise Split**, **Text Cleaning**, **Prompt-Based Generation** |
-| **`김성은`** | **Text/Label Noise Split**, **Back-Translation**(Google Translate), **Prompt-Based Generation** |
-| **`김태원`** | **EDA**, **Re-Labeling**, **Evol-Instruct LLM for Augmentation**  |
-| **`이다현`** | **EDA**, **Re-Labeling**, **Evol-Instruct LLM for Augmentation**  |
-| **`이한서`** | **Text/Label Noise Split**, **Text Cleaning**, **Back-translation**(DeepL), **Prompt-Based Generation** |
-| **`정주현`** | **Re-Labeling**, **ML Model Searching** |
+| **`권지수`** | **Text/Label Noise Split, Text Cleaning, Model Searching, Model Compression** |
+| **`김성은`** | **Text/Label Noise Split, Model Searching, Prompt-Based Generation** |
+| **`김태원`** | **PM, EDA, Re-Labeling, Evol-Instruct LLM for Augmentation** |
+| **`이다현`** | **PM, EDA, Re-Labeling, Evol-Instruct LLM for Augmentation** |
+| **`이한서`** | **Model Searching, Data Augmentation, Prompt Engineering, Fine-tuning** |
+| **`정주현`** | **Re-Labeling, ML Model Searching** |
 
 <br>
 
